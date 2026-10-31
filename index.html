@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaxLedger AI - GST & ITC Reconciliation Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-sans">
+  <div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/30">
+          TL
+        </div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight">TaxLedger AI</h1>
+          <p class="text-xs text-slate-400">GST Compliance & Statutory Reconciliation Operating System</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <select id="clientSelect" class="bg-slate-800 text-xs text-slate-200 border border-slate-700 rounded-lg px-3 py-2 outline-none">
+          <option value="c1">Apex Tech Solutions Pvt Ltd (27AABCA1234F1Z5)</option>
+          <option value="c2">Sterling Retailers LLP (27AAAFS9988K1ZQ)</option>
+        </select>
+        <span class="bg-blue-900/50 text-blue-300 text-xs font-semibold px-2.5 py-1 rounded-md border border-blue-700/50">
+          FY 2026-27 | Oct 2026
+        </span>
+      </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-slate-200 px-6 flex space-x-6 text-sm font-medium">
+      <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-3 border-b-2 border-blue-600 text-blue-600 font-semibold transition-colors">Executive Dashboard</button>
+      <button onclick="switchTab('reconciliation')" id="tab-reconciliation" class="py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 transition-colors">5-Way Reconciliation</button>
+      <button onclick="switchTab('ledger')" id="tab-ledger" class="py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 transition-colors">ITC Statutory Ledger</button>
+      <button onclick="switchTab('setoff')" id="tab-setoff" class="py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 transition-colors">GST Set-Off Engine (Rule 88A)</button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
+      <!-- SECTION 1: DASHBOARD -->
+      <section id="view-dashboard" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-xs uppercase font-semibold text-slate-500">Gross Sales Turnover</p>
+            <p class="text-2xl font-bold text-slate-900 mt-1">₹11,50,000</p>
+            <p class="text-xs text-emerald-600 font-medium mt-2">✓ 3 Invoices Reconciled</p>
+          </div>
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-xs uppercase font-semibold text-slate-500">Gross Purchases</p>
+            <p class="text-2xl font-bold text-slate-900 mt-1">₹4,65,000</p>
+            <p class="text-xs text-blue-600 font-medium mt-2">4 Inward Vouchers</p>
+          </div>
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-xs uppercase font-semibold text-slate-500">Net Eligible ITC Claim</p>
+            <p class="text-2xl font-bold text-emerald-600 mt-1">₹56,700</p>
+            <p class="text-xs text-amber-600 font-medium mt-2">⚠ ₹33,600 Sec 17(5) Blocked</p>
+          </div>
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm bg-gradient-to-br from-white to-red-50/40">
+            <p class="text-xs uppercase font-semibold text-slate-500">Cash Payable (PMT-06)</p>
+            <p id="dashCashPayable" class="text-2xl font-bold text-red-600 mt-1">₹1,89,900</p>
+            <p class="text-xs text-slate-500 font-medium mt-2">Rule 88A Exhausted</p>
+          </div>
+        </div>
+
+        <!-- Inward Register Table -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+            <h2 class="font-bold text-slate-800">Inward Supplies & Purchase Register</h2>
+            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">4 Vouchers</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                <tr>
+                  <th class="py-3 px-4">Invoice No / Date</th>
+                  <th class="py-3 px-4">Supplier & GSTIN</th>
+                  <th class="py-3 px-4 text-right">Taxable (₹)</th>
+                  <th class="py-3 px-4 text-right">IGST (₹)</th>
+                  <th class="py-3 px-4 text-right">CGST (₹)</th>
+                  <th class="py-3 px-4 text-right">SGST (₹)</th>
+                  <th class="py-3 px-4">ITC Classification</th>
+                  <th class="py-3 px-4">GSTR-2B Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-mono">
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-4 font-sans font-medium text-slate-800">INV/2026/089<div class="text-[11px] text-slate-400">2026-10-12</div></td>
+                  <td class="py-3 px-4 font-sans font-medium text-slate-700">Tech Cloud Services<div class="text-[11px] text-slate-400">27AABCT8899M1Z2</div></td>
+                  <td class="py-3 px-4 text-right">2,50,000.00</td>
+                  <td class="py-3 px-4 text-right">45,000.00</td>
+                  <td class="py-3 px-4 text-right">-</td>
+                  <td class="py-3 px-4 text-right">-</td>
+                  <td class="py-3 px-4 font-sans"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[11px] font-semibold">Eligible - Sec 16</span></td>
+                  <td class="py-3 px-4 font-sans"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[11px] font-semibold">Matched</span></td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-4 font-sans font-medium text-slate-800">SR-4410<div class="text-[11px] text-slate-400">2026-10-18</div></td>
+                  <td class="py-3 px-4 font-sans font-medium text-slate-700">Delta Logistics Corp<div class="text-[11px] text-slate-400">27BBBCD5544N1ZX</div></td>
+                  <td class="py-3 px-4 text-right">80,000.00</td>
+                  <td class="py-3 px-4 text-right">-</td>
+                  <td class="py-
